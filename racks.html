@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cinematic 3D Glass Experience</title>
+  <title>chief</title>
 
-  <!-- Clean, Modern Sans-Serif Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- GSAP Library for Smooth Animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <style>
@@ -38,7 +36,6 @@
       cursor: pointer;
     }
 
-    /* Video styling - static background */
     video {
       position: absolute;
       top: 50%;
@@ -53,7 +50,6 @@
       transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Blur preview overlay styling */
     .blur-bg {
       position: absolute;
       top: 50%;
@@ -75,7 +71,6 @@
       display: none;
     }
 
-    /* Click to Enter Overlay Text with generic modern font */
     .enter-overlay {
       position: relative;
       z-index: 5;
@@ -89,7 +84,6 @@
       user-select: none;
     }
 
-    /* Active transition classes */
     .media-wrapper.active .blur-bg {
       opacity: 0;
       filter: blur(0px);
@@ -114,8 +108,7 @@
     <canvas id="snapshot-canvas"></canvas>
     <img id="blurBg" class="blur-bg" alt="Loading preview...">
     
-    <!-- Click to Enter Text -->
-    <div class="enter-overlay" id="enterText">Click to Enter</div>
+    <div class="enter-overlay" id="enterText">[Click to Enter]</div>
 
     <video id="myVideo" loop playsinline>
       <source src="dnt like.mp4" type="video/mp4">
@@ -146,7 +139,6 @@
       
       wrapper.classList.add('active');
 
-      // Request browser fullscreen
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => {
