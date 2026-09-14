@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yungtrappa</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      opacity: 0;
+      animation: fadeInPage 1.5s ease-in-out forwards;
+      perspective: 1200px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes fadeInPage {
+      to { opacity: 1; }
+    }
+
+    .media-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.05);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .blur-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.1);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      filter: blur(25px);
+      opacity: 1;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #snapshot-canvas {
+      display: none;
+    }
+
+    .enter-overlay {
+      position: relative;
+      z-index: 5;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      user-select: none;
+    }
+
+    .media-wrapper.active .blur-bg {
+      opacity: 0;
+      filter: blur(0px);
+    }
+
+    .media-wrapper.active video {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .media-wrapper.active .enter-overlay {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="media-wrapper" id="enterButton">
+    <canvas id="snapshot-canvas"></canvas>
+    <img id="blurBg" class="blur-bg" alt="Loading preview...">
+    
+    <div class="enter-overlay" id="enterText">[Click to Enter]</div>
+
+    <video id="myVideo" loop playsinline>
+      <source src="strech.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <script>
+    const video = document.getElementById('myVideo');
+    const canvas = document.getElementById('snapshot-canvas');
+    const blurBg = document.getElementById('blurBg');
+    const wrapper = document.getElementById('enterButton');
+
+    video.addEventListener('loadeddata', () => {
+      video.currentTime = 0;
+    });
+
+    video.addEventListener('seeked', () => {
+      canvas.width = video.videoWidth || 1920;
+      canvas.height = video.videoHeight || 1080;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      blurBg.src = canvas.toDataURL('image/jpeg');
+    });
+
+    wrapper.addEventListener('click', () => {
+      if (wrapper.classList.contains('active')) return;
+      
+      wrapper.classList.add('active');
+
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => {
+          console.log("Fullscreen request blocked or not supported:", err);
+        });
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+
+      video.volume = 0;
+      video.muted = false;
+      video.play();
+
+      let fadeAudio = setInterval(() => {
+        if (video.volume < 0.95) {
+          video.volume = Math.min(1, video.volume + 0.05);
+        } else {
+          video.volume = 1;
+          clearInterval(fadeAudio);
+        }
+      }, 50);
+
+      setTimeout(() => {
+        blurBg.remove();
+      }, 1200);
+    }, { once: true });
+  </script>
+
+</body>
+</html>
