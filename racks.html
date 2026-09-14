@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MP4 Video Player</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      font-family: Arial, sans-serif;
+    }
+
+    .video-container {
+      width: 90%;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    video {
+      width: 100%;
+      max-height: 80vh;
+      background: black;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="video-container">
+    <h1>My MP4 Video</h1>
+
+    <video controls>
+      <source src="dnt like.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </main>
+</body>
+</html>
