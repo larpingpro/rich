@@ -122,17 +122,27 @@
     const blurBg = document.getElementById('blurBg');
     const wrapper = document.getElementById('enterButton');
 
+    function captureSnapshot() {
+      if (video.videoWidth) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        blurBg.src = canvas.toDataURL('image/jpeg');
+      }
+    }
+
     video.addEventListener('loadeddata', () => {
-      video.currentTime = 0;
+      captureSnapshot();
     });
 
     video.addEventListener('seeked', () => {
-      canvas.width = video.videoWidth || 1920;
-      canvas.height = video.videoHeight || 1080;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      blurBg.src = canvas.toDataURL('image/jpeg');
+      captureSnapshot();
     });
+
+    if (video.readyState >= 2) {
+      captureSnapshot();
+    }
 
     wrapper.addEventListener('click', () => {
       if (wrapper.classList.contains('active')) return;
@@ -168,6 +178,8 @@
       }, 1200);
     }, { once: true });
   </script>
-<script src="script.js"></script>
+
+  <!-- This calls your external script file -->
+  <script src="script.js"></script>
 </body>
 </html>
